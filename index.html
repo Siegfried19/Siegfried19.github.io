@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>College Costs Narrative</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body{
+      font-family:Arial,Helvetica,sans-serif;
+      margin:20px;}
+    h1{
+      text-align:center;
+      margin-top:0;}
+    .button-container{
+      text-align:right;
+      margin-bottom:10px;}
+    button{
+      padding: 0.6em 1.2em; 
+      font-size: clamp(0.9rem, 2vw, 1.1rem);
+      border-radius: 4px;}
+    .scene{
+      display:none;
+      grid-template-columns:1fr 1fr;
+      grid-gap:20px;
+      align-items:start;}
+    .scene.active{
+      display:grid;}
+    .chart-box{
+      position:relative;}
+    svg{
+      border:1px solid #ccc;
+      background:#fafafa;}
+    .tooltip{
+      position:absolute;
+      background:#fff;
+      border:1px solid #ccc;
+      padding:6px 8px;
+      font-size:.8rem;
+      pointer-events:none;
+      box-shadow:0 2px 4px rgba(0,0,0,.15);}
+    .vline{stroke:#999;stroke-width:1;stroke-dasharray:3 2;}
+    .annotation path{stroke:#d62728;stroke-width:1.5px;fill:none;}
+    .annotation text{font-size:.75rem;}
+    .annotation-note-bg{fill:#fff;}
+  </style>
+</head>
+
+<body>
+<h1>College Costs & Affordability</h1>
+
+<div class="button-container">
+    <button id="previous">Previous</button><button id="next">Next</button>
+</div>
+
+<div id="scene-0" class="scene active">
+  <div class="text">
+    <h2>1.Tuition Outpaces Inflation</h2>
+    <p>For two decades, tuition has sprinted ahead of everyday prices and gap widens each year</p>
+  </div>
+  <div class="chart-box"><svg id="chart" width="600" height="420"></svg></div>
+</div>
+
+<div id="scene-1" class="scene">
+  <div class="text">
+    <h2>2.Incomes Can’t Catch Tuition</h2>
+    <p>Since 2000, public school tuition fee has risen much faster as the median paycheck. Althouth recent wage gains slowed the climb, 
+      yet the tuition-to-income ration still from 8% to 12.1%</p>
+  </div>
+  <div class="chart-box"><svg id="chart" width="600" height="420"></svg></div>
+</div>
+
+<div id="scene-2" class="scene">
+  <div class="text">
+    <h2>3.Debt Soars, Salaries Lag</h2>
+    <p>Average student Debt have set new records every year, rising faster than starting salary. Students begin adult life with a higher repayment burden, making live milestones harder to reach.</p>
+  </div>
+  <div class="chart-box"><svg id="chart" width="600" height="420"></svg></div>
+</div>
+
+<div id="controls" style="margin-top:10px;"></div>
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://unpkg.com/d3-annotation@2.5.1"></script>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
