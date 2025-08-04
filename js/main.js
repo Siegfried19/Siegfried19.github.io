@@ -1,6 +1,6 @@
 import { addAnno } from './utils.js';
 
-const state = { scene:0, showYoY:false, showPell:false, extra:'none' };
+const state = { scene:0, extra:'none' };
 const scenesDiv=[...document.querySelectorAll('.scene')];
 
 document.getElementById('next').onclick=()=>{state.scene=(state.scene+1)%3;render();}
@@ -45,6 +45,9 @@ function scene0(update=false){
 
   svg.selectAll('g.chartroot').remove();
 
+  const leftColor  = '#d1495b';  
+  const rightColor = '#1d3557'; 
+
   // Axis
   const g = svg.append('g')
                .attr('class','chartroot')
@@ -80,17 +83,21 @@ function scene0(update=false){
   
   g.append('g')
     .attr('class','y axis left')
+    .attr('stroke', leftColor)
+    .attr('fill',  leftColor)
     .call(d3.axisLeft(yL));
   
   g.append('g')
     .attr('class', 'y axis right')
+    .attr('stroke', rightColor)
+    .attr('fill',  rightColor)
     .attr('transform',`translate(${width},0)`)
     .call(d3.axisRight(yR));
 
   // Two line
   const series = [
-    {key:'tuition_cpi', color:'#d1495b', dash:'' , y:yL, field:'tuition_cpi_index'},
-    {key:'total_cpi',     color:'#1d3557', dash:'4 2', y:yR, field:'cpi_all_items_index'}
+    {key:'tuition_cpi', color:leftColor, dash:'' , y:yL, field:'tuition_cpi_index'},
+    {key:'total_cpi',     color:rightColor, dash:'4 2', y:yR, field:'cpi_all_items_index'}
   ];
 
   const lines = g.selectAll('.line').data(series, d=>d.key);
@@ -198,9 +205,11 @@ function scene0(update=false){
     });
 
   // Annotation
-  addAnno(svg,'anno0',[
-    {year:2008,value: tuitionData.find(d=>d.year===2008).tuition_cpi_index, text:'Tuition CPI still +5% under 2008 crisis'}
-  ],x,yL,margin, 20, 30, 220);
+  addAnno(svg,'anno0',[{
+    year : 2008,
+    value: tuitionData.find(d=>d.year===2008).tuition_cpi_index, 
+    text:'Tuition CPI still +5% under 2008 crisis'
+  }],x,yL,margin, 20, 30, 220);
 }
 
 
@@ -210,6 +219,9 @@ function scene1(update=false){
   const margin = {t:30,r:50,b:40,l:60};
   const width  = +svg.attr('width')  - margin.l - margin.r;
   const height = +svg.attr('height') - margin.t - margin.b;
+
+  const leftColor  = '#d1495b';  
+  const rightColor = '#158639ff'; 
 
   // Axis
   svg.selectAll('g.chartroot').remove();
@@ -228,6 +240,7 @@ function scene1(update=false){
 
   const yR = d3.scaleLinear()
               .domain(d3.extent(incomeData,d=>d.median_household_income_2023usd))
+              
               .nice()
               .range([height,0]);
   
@@ -240,16 +253,20 @@ function scene1(update=false){
 
   g.append('g')
     .attr('class','y axis')
+    .attr('stroke', leftColor)
+    .attr('fill',  leftColor)
     .call(d3.axisLeft(yL));
 
   g.append('g')
     .attr('class','y axis')
+    .attr('stroke', rightColor)
+    .attr('fill',  rightColor)
     .attr('transform',`translate(${width},0)`)
     .call(d3.axisRight(yR));
 
   const series = [
-    { key:'tuition', color:'#d1495b', dash:'',    y:yL, field:'tuition_public' },
-    { key:'income',  color:'#158639ff', dash:'4 2', y:yR, field:'median_household_income_2023usd' }
+    { key:'tuition', color:leftColor, dash:'',    y:yL, field:'tuition_public' },
+    { key:'income',  color:rightColor, dash:'4 2', y:yR, field:'median_household_income_2023usd' }
   ];
 
   const lines = g.selectAll('.line').data(series, d => d.key);
@@ -364,6 +381,11 @@ function scene1(update=false){
       tip.style('opacity', 0);
     });
 
+  addAnno(svg,'anno0',[{
+    year : 2008,
+    value: incomeData.find(d=>d.year===2008).tuition_public, 
+    text:'2008 crisis'
+  }],x,yL,margin, 20, 20, 80);
     
 }
 
@@ -377,7 +399,7 @@ function scene2(update = false) {
   const W   = +svg.attr('width')  - M.l - M.r;
   const H   = +svg.attr('height') - M.t - M.b;
 
-  svg.selectAll('g.chartroot').remove();     
+  svg.selectAll('g.chartroot').remove();
   
   // Axis
   const g = svg.append('g')
@@ -417,16 +439,13 @@ function scene2(update = false) {
 
   // lines
   const baseSeries = [
-    { key:'avg_debt_usd',        field:'avg_debt_usd',
-      label:'Avg Debt (USD)',    color:'#e9c46a',    dash:'',    y:yL },
-
-    { key:'starting_salary_usd', field:'starting_salary_usd',
-      label:'Starting Salary (USD)', color:'#ac1b91ff', dash:'4 2', y:yL }
+    { key:'avg_debt_usd', color:'#e9c46a', dash:'', field:'avg_debt_usd', label:'Avg Debt (USD)', y:yL},
+    { key:'starting_salary_usd', color:'#ac1b91ff', dash:'4 2', field:'starting_salary_usd', label:'Starting Salary (USD)', y:yL }
   ];
 
   // Extra lines
   const extraInfo = {
-    '5yr': { key:'debt_5yr_usd', color:'#1f190eff', dash:'3 3', y:yL, field:'debt_5yr_usd', label:'Debt After 5 yr (USD)',  },
+    '5yr': { key:'debt_5yr_usd', color:'#e9c46a', dash:'3 3', y:yL, field:'debt_5yr_usd', label:'Debt After 5 yr (USD)',  },
     'Debt-to-Income ratio': { key:'dti_percent', color:'#a92e1eff', dash:'4 2', y:yR, field:'dti_percent', label:'Debt-to-Income ratio (%)'}
   };
 
